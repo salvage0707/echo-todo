@@ -1,0 +1,8 @@
+FROM golang:1.15.0 as builder
+
+ENV GO11MODULE=on
+
+WORKDIR /go/src/github.com/app
+ADD . .
+
+CMD go run main.go

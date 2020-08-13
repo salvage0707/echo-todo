@@ -1,0 +1,35 @@
+version: '3'
+services:
+  postgres:
+    container_name: postgres-db
+    image: postgres:11
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pgsql-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    command: go run main.go
+    environment:
+      PORT: "8000"
+      DB_HOST: postgres-db
+      DB_PORT: 5432
+      DB_NAME: postgres
+      DB_USER: root
+      DB_PASS: password
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/go/src/github.com/app
+      - go-src:/go
+    depends_on:
+      - postgres
+
+volumes:
+  pgsql-data:
+  go-src:
