@@ -6,7 +6,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/labstack/gommon/log"
+
 	"github.com/jinzhu/gorm"
+	"github.com/lib/pq"
 
 	// SQLite
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -45,11 +48,22 @@ func GetConnection() *gorm.DB {
 
 func initConnection() *gorm.DB {
 	dbURL := config.Config().GetString("database.url")
-
-	db, err := gorm.Open("postgres", dbURL+" sslmode=disable")
+	connectionURL, err := pq.ParseURL(dbURL)
 	if err != nil {
-		fmt.Println(err)
-		panic(fmt.Sprintf("データベースへの接続に失敗しました。 url: %s", dbURL))
+		log.Error(err.Error())
+		panic(fmt.Sprintf("データベースURLの解析に失敗しました。 url: %s", dbURL))
+	}
+
+	if config.IsDevelopmentMode() {
+		connectionURL += " sslmode=disable"
+	} else {
+		connectionURL += " sslmode=require"
+	}
+
+	db, err := gorm.Open("postgres", connectionURL)
+	if err != nil {
+		log.Error(err.Error())
+		panic(fmt.Sprintf("データベース接続に失敗しました。 url: %s", dbURL))
 	}
 
 	return db

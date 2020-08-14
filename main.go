@@ -13,6 +13,7 @@ func main() {
 	flag.Parse()
 
 	config.SetupConfig(*mode)
+
 	database.SetupDatabase()
 	defer database.CloseDatabase()
 

@@ -1,2 +1,5 @@
+app:
+  debug: true
+
 database:
-    url: "host=${DB_HOST} port=${DB_PORT} user=${DB_USER} dbname=${DB_NAME} password=${DB_PASS}"
+  url: postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}

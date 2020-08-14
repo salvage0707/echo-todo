@@ -12,6 +12,6 @@ RUN go build main.go
 FROM alpine
 COPY --from=builder /go/src/github.com/app /app
 
-RUN ls /app
+WORKDIR /app
 
-CMD /app/main $PORT
+CMD ./main -port $PORT -mode producation

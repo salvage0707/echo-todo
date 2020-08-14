@@ -1,6 +1,8 @@
 package server
 
 import (
+	"echo_sample/settings/config"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -8,11 +10,11 @@ import (
 func Run(port string) {
 	// Echo instance
 	e := echo.New()
+	e.Debug = config.Config().GetBool("app.debug")
 
-	// Middleware
+	// 設定
+	SetupValidater(e)
 	setupMiddleware(e)
-
-	// Routes
 	setupRouter(e)
 
 	// Start server
